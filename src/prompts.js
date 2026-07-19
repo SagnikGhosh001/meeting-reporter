@@ -7,8 +7,14 @@ CRITICAL: You are extracting, not interpreting. Every fact you write must map to
 - invent reasons, motivations, or emotional states ("struggling with," "worried about," "wants to")
 - explain HOW or WHY something works/happens unless the transcript explicitly says so
 - turn a passing mention into a bigger claim than what was said
+- dress up simple facts in vague, inflated language ("requiring advanced technology," "necessity of premium capabilities," "deep content synthesis"). If the fact is simple ("they need the paid version of ChatGPT"), state it that simply. Fancy phrasing that doesn't add new information is filler, and filler is banned even when it sounds smart.
 
-That said — do NOT under-report either. If the transcript contains multiple distinct facts about a person (what they're building, what they tried, what didn't work, what's next, who they're waiting on), include ALL of them. Brevity means no filler words, not fewer facts. A one-line entry with only a headline and no substance is a failure — give the reader enough to actually picture what's happening.
+LENGTH IS A HARD LIMIT, NOT A SUGGESTION:
+- The lede paragraph is 35-60 words. This is a ceiling, not a floor — do not write a second paragraph, ever. If there's more to say, use bullets, not another paragraph.
+- If your draft lede is longer than 60 words, cut it down by removing restated/rephrased content, not by removing facts. Usually a long draft is one fact said twice in different words — keep the clearer version, delete the other.
+- Do NOT under-report either: if the transcript has multiple distinct facts (what they're building, what they tried, what didn't work, what's next), include them — but as one tight sentence each, not an essay.
+
+NAMES: Always use the person's full name exactly as given, every time you refer to them within their own entry. Never switch to initials or abbreviations (e.g. never write "SG" for "Sagnik Ghosh") partway through — this breaks consistency with the byline.
 
 Rules:
 1. Read the entire transcript first.
@@ -23,16 +29,16 @@ For each participant, output:
 
 ## <Person Name>
 ### <Punchy 3-6 word headline, built only from stated facts>
-<A short lede paragraph, 35-60 words, written like an actual news blurb (subject, verb, concrete facts) covering everything explicitly stated: what they're doing, what they tried, what worked or didn't, and what's next. Weave facts into flowing sentences, not a dry list — but invent nothing.>
+<ONE lede paragraph, 35-60 words MAXIMUM, one paragraph only — never two. Written like an actual news blurb (subject, verb, concrete facts), using the person's full name, covering only what was explicitly stated: what they're doing, what they tried, what worked or didn't, what's next. Plain, direct language — no inflated phrasing.>
 - <optional bullet: 1 more explicitly-stated fact, max 15 words>
 - <optional bullet: 1 more explicitly-stated fact, max 15 words>
 
-Use bullets only for extra standalone facts that don't fit naturally into the lede. Never explain background or reasoning unless someone explicitly gave that reasoning.
+Use bullets for any extra facts that don't fit in the one lede paragraph — never a second paragraph.
 
 Headline style: tabloid front page, built from real content, not spin.
 Good: "Transcripts Still Lying", "Hook Nobody Understands", "Publishing, Not Personal"
 Bad: "Weekly Update", "Current Progress", "Status Report"
-Also bad — invented framing: writing "Struggling With X" when nobody used a word like "struggling." Instead state the plain fact: "Says transcription tool gives wrong output."
+Also bad — invented framing: "Struggling With X" when nobody said "struggling," or "Requires Advanced Technology" when the transcript just said they need the paid version of a tool. State the plain fact instead.
 
 If any update is genuinely urgent, surprising, or a team-wide decision, prefix that person's headline line with "BREAKING:" — sparingly (0-2 max), only for things explicitly stated, never implied.
 
@@ -58,38 +64,62 @@ HARD RULES
 - All CSS in one <style> tag. No JS. No external fonts/CDNs.
 - Never produce anything that looks like a research paper, resume, or plain blog post: no centered single-column walls of text, no default serif-only academic look, no big empty margins with one column of body text.
 
+EXACT MARKUP TEMPLATE (critical — copy this structure literally, do not improvise tags)
+Use this exact tag structure for every story entry. Do NOT write words like "small" or "h3" as visible text, and do NOT put tag names inside class attributes (e.g. never write class="entry-headline h3") — those are real HTML elements, not text or CSS selectors to be typed out.
+
+<div class="timeline-entry">
+  <small class="byline">By [Person Name]</small>
+  <h3 class="entry-headline">[Headline text]</h3>
+  <p>[Paragraph text]</p>
+  <ul><li>[Optional bullet fact]</li></ul>
+</div>
+
+Rules for this template:
+- Every "By <Name>" must be inside a real <small> element — not the literal word "small" typed as text.
+- Every headline must be inside a real <h3> element — never a <div> with a made-up class like "entry-headline h3".
+- Replace [Person Name], [Headline text], and [Paragraph text] with the actual content from the Markdown — never leave placeholder brackets in the output.
+- Omit the <ul> entirely if a story has no bullet facts — don't leave an empty list.
+- Before finishing, scan your own output for the literal words "small", "h1", "h2", "h3", or "div" appearing as visible text content or inside a class attribute — if found anywhere, that is a bug and must be corrected to use the real HTML tag instead.
+
 MANDATORY BYLINE (critical — do not skip this)
-The Markdown gives you "## Person Name" for each story. That name must appear, verbatim, as visible text on the page for that story — never dropped, never folded into the headline, never replaced with a generic label.
+The Markdown gives you "## Person Name" for each story. That name must appear, verbatim, as visible text for that story — never dropped, never folded into the headline, never replaced with a generic label like "STAFF REPORT" (this is an internal team bulletin, not a news agency). Just "By <Name>" inside a <small> tag, per the template above, is correct and sufficient. If a story's byline is missing from the rendered HTML, that output is wrong.
 
-Do this exactly:
-- Input: "## <Person Name>" followed by "### <Headline Text>"
-- Output: render "<Headline Text>" as the large headline, and directly below it render "By <Person Name>" as a small byline — small-caps or letter-spaced, small font-size, using the actual name from the input, never a placeholder or invented title.
+ADAPTIVE LAYOUT — "Timeline" (critical)
+Do NOT use a multi-column grid or a grid of cards. Use ONE simple vertical timeline structure that works at any headcount:
 
-Do NOT invent wire-service labels like "STAFF REPORT" — this is an internal team bulletin, not a news agency. Just "By <Name>" is correct and sufficient.
+- Wrap all ".timeline-entry" blocks in a single outer container with a left border acting as the timeline spine: "border-left: 2px solid var(--color-border); padding-left: 20px; position: relative;" on the wrapper.
+- Each ".timeline-entry" needs "position: relative; padding-bottom: 24px;" and a small circular marker positioned at the left edge using an absolutely positioned pseudo-element or a small <span>, e.g. "position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-accent);".
+- Inside each entry, in this exact order: byline, then headline, then one paragraph, then optional bullets (per the markup template above).
+- The FIRST entry in the Markdown may get a slightly larger headline size (e.g. 1.8rem vs 1.4rem for the rest) and a drop cap on its paragraph's first letter, to signal it's the top story — but its HTML structure and CSS classes are otherwise IDENTICAL to every other entry. Do not give it a different wrapper element or a separate section.
+- The order of entries is purely whatever order the Markdown gives them in. Do NOT reorder entries by importance, chronology, or any other logic, and do NOT imply through visual design (arrows, "next" labels, connecting narrative text) that one story leads to or causes another — these are independent, parallel updates from different people, not a sequence of related events. The connecting spine and dots are a visual rhythm device only, not a claim about relationship between entries.
+- This must scale automatically at any headcount: 2 people = 2 entries down the line, 12 people = 12 entries down the line. NEVER switch to a grid, columns, or card layout at any headcount — always the same single vertical timeline, just more or fewer entries.
+- Remove the bottom padding and hide the spine border/marker on the very last entry so the timeline doesn't trail with a dangling line past the final story (e.g. ".timeline-entry:last-child { padding-bottom: 0; border-bottom: none; } .timeline-entry:last-child::before { display: none; }").
+- If the Markdown has a "# Team Brief" section, render it as a small labeled block below the timeline, using the Markdown's own heading text — do not invent a different title for it, and do not fabricate one if the Markdown doesn't include it.
 
-If a story's byline is missing from the rendered HTML, that output is wrong — check every story block has one before finishing.
+DROP CAP RULES (critical — common bug to avoid)
+The drop cap on the first entry's paragraph must have visible breathing room from the following letter:
+- Use "float: left;" on the ::first-letter — never "float: initial" or no float, since the drop cap needs to sit inset with text wrapping beside it.
+- Use a small POSITIVE right margin, e.g. "margin: 0 0.06em 0 0;" — never a negative margin (like "margin: -0.1em") and never zero margin, both of which crowd the drop cap into the next letter with no visible gap.
+- Mentally verify before finishing: the drop cap letter and the letter immediately after it must never touch or overlap.
 
-ADAPTIVE LAYOUT (critical)
-Count the number of person-articles (##) in the input and choose ONE layout:
-- 1-2 people: "Spotlight" layout — each story full-width or side-by-side as two big hero blocks, huge headline, generous whitespace, feels like a homepage feature.
-- 3-4 people: "Grid" layout — CSS grid, 2 columns on larger stories, headlines medium-large, compact body text.
-- 5-8 people: "Dense Grid" layout — CSS grid with 3 columns, smaller cards, tighter type scale, headline still bold but shorter line-height.
-- 9+ people: "Wire Feed" layout — compact multi-column list style (like an AP wire feed), each entry small, headline + byline + one-liner only, minimal vertical space per person.
-Use CSS Grid ("grid-template-columns: repeat(auto-fit, minmax(...))" or explicit column counts) so the page never has awkward empty gaps regardless of person count.
+LAYOUT INTEGRITY (critical — common bug to avoid)
+Entries will always have different amounts of content — different paragraph lengths, different numbers of bullets. Handle this without breaking alignment:
+- Never use "justify-content: space-between" or any distribution rule that stretches shorter content to fill extra height. Avoid fixed heights or min-height hacks on entries. Let each entry's height come naturally from its own content.
+- Do not force equal spacing between entries by padding shorter ones — spacing between entries should be visually consistent (same padding-bottom value), not equal total height.
 
 TICKER FOR "BREAKING" ITEMS
-If any headline is prefixed with "BREAKING:", pull those into a horizontal scrolling ticker bar directly under the masthead. Include the person's real name from the Markdown in the ticker text too (e.g. "<NAME>: <fact>"), not just the fact alone. Build it with a pure-CSS marquee (NOT the deprecated <marquee> tag): an overflow:hidden container with a flex/inline-block strip animated with @keyframes translateX loop, seamless and continuous. Strip the literal "BREAKING:" text (replace with a small badge like "LIVE" or "•"). If there are no BREAKING items, skip the ticker entirely — don't fake one.
+If any headline is prefixed with "BREAKING:", pull those into a horizontal scrolling ticker bar directly under the masthead, above the timeline. Include the person's real name from the Markdown in the ticker text too (e.g. "<NAME>: <fact>"), not just the fact alone. Build it with a pure-CSS marquee (NOT the deprecated <marquee> tag): an overflow:hidden container with a flex/inline-block strip animated with @keyframes translateX loop, seamless and continuous — this must work whether there is 1 breaking item or several. Strip the literal "BREAKING:" text (replace with a small badge like "LIVE" or "•"). If there are no BREAKING items, skip the ticker entirely — don't fake one, and don't leave an HTML comment about it in the output.
 
 VISUAL STYLE
-- Modern masthead: bold, large, tight-tracking wordmark. Publication date in a thin metadata bar underneath — no issue number, no volume number, no fabricated numbering of any kind.
+- Modern masthead: bold, large, tight-tracking wordmark, left-aligned. Publication date in a thin metadata bar underneath — no issue number, no volume number, no fabricated numbering of any kind.
 - Typography: pair one strong sans-serif for headlines/UI (weight contrast, tight leading) with a serif or clean sans for body copy. Avoid an all-serif academic look.
-- Color: black, white, off-white paper background (#F8F5EE), one accent color used sparingly (e.g. for the ticker bar, a rule line, or "BREAKING" badge) — not full color, but not flat monochrome either.
+- Color: black, white, off-white paper background (#F8F5EE), one accent color used sparingly (e.g. for the timeline markers, ticker bar, or "BREAKING" badge) — not full color, but not flat monochrome either.
 - No cards with shadows/rounded corners, no dashboard widgets, no centered plain paragraphs.
-- Use hairline rules, small-caps section labels, generous headline size contrast, and a magazine-like asymmetric feel — not a symmetric grid of equal boxes.
-- Drop cap only on the featured/first story, not every article.
+- Use hairline rules, small-caps section labels, and generous headline size contrast for the lead entry vs the rest.
+- Drop cap only on the lead entry's paragraph, not every entry — following the DROP CAP RULES above.
 
 FOOTER
 Include a minimal footer: page number and publication date only. No issue number. Keep it small and unobtrusive.
 
-Output only the final HTML document.
+Output only the final HTML document. Do not include any HTML comments in the output.
 ${article}`;
