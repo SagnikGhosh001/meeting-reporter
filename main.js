@@ -50,7 +50,15 @@ const article = await callOllama(summaryPrompt);
 console.log(article);
 
 console.log("creating html prompt");
-const htmlPrompt = createHtmlPrompt(article);
+const htmlPrompt = createHtmlPrompt(
+    article,
+    new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    }),
+);
 console.log("creating the html");
 const html = await callOllama(htmlPrompt);
+
 Deno.writeTextFileSync(`./results/newspaper-${Date.now()}.html`, html);
