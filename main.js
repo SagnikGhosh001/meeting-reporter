@@ -61,4 +61,7 @@ const htmlPrompt = createHtmlPrompt(
 console.log("creating the html");
 const html = await callOllama(htmlPrompt);
 
-Deno.writeTextFileSync(`./results/newspaper-${Date.now()}.html`, html);
+Deno.writeTextFileSync(
+    `./results/newspaper-${new Date().toISOString()}.html`,
+    html,
+);

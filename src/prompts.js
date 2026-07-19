@@ -68,6 +68,13 @@ DATE (critical — do not invent, do not use any other date)
 The publication date is provided below as a literal value, already computed by the calling application. Copy it EXACTLY into the masthead's date bar and into the footer, character for character. Do NOT generate, guess, calculate, "look up," or reformat a date yourself — you have no access to the real current date or any date function, so any date you produce on your own will be wrong. The only correct date string to use anywhere in the page is:
 "${meetingDate}"
 
+MASTHEAD TITLE (critical — must be derived from the content, not generic)
+Read the Markdown's headlines and content, then invent a short, punchy masthead name for THIS specific bulletin — 2-4 words, newspaper-style (e.g. "THE HOOK REPORT", "TRANSCRIPT WARS", "THE AUTOMATION DESK", "SIGNAL & NOISE"). Base it on the actual theme running through the stories (e.g. if most stories are about automating transcripts and AI workflows, lean into that; if there's team debate/disagreement, lean into that instead).
+
+Do NOT default to generic, could-be-anything names like "THE DIGITAL PULSE," "THE OPERATIONAL LOG," "THE DAILY BRIEF," "THE WIRE," or "TEAM DIGEST" — these say nothing about this specific meeting's content and could be reused for any bulletin. The name must feel like it was written for these specific stories, not a placeholder.
+
+Keep it in Title Case or Caps, matching a real newspaper wordmark. It should still look professional, not jokey/childish — punchy and specific, not silly.
+
 EXACT MARKUP TEMPLATE (critical — copy this structure literally, do not improvise tags)
 Use this exact tag structure for every story entry. Do NOT write words like "small" or "h3" as visible text, and do NOT put tag names inside class attributes (e.g. never write class="entry-headline h3") — those are real HTML elements, not text or CSS selectors to be typed out.
 
@@ -115,7 +122,7 @@ TICKER FOR "BREAKING" ITEMS
 If any headline is prefixed with "BREAKING:", pull those into a horizontal scrolling ticker bar directly under the masthead, above the timeline. Include the person's real name from the Markdown in the ticker text too (e.g. "<NAME>: <fact>"), not just the fact alone. Build it with a pure-CSS marquee (NOT the deprecated <marquee> tag): an overflow:hidden container with a flex/inline-block strip animated with @keyframes translateX loop, seamless and continuous — this must work whether there is 1 breaking item or several. Strip the literal "BREAKING:" text (replace with a small badge like "LIVE" or "•"). If there are no BREAKING items, skip the ticker entirely — don't fake one, and don't leave an HTML comment about it in the output.
 
 VISUAL STYLE
-- Modern masthead: bold, large, tight-tracking wordmark, left-aligned. Publication date in a thin metadata bar underneath, using the exact date value given above — no issue number, no volume number, no fabricated numbering of any kind.
+- Modern masthead: bold, large, tight-tracking wordmark using the content-derived title from above, left-aligned. Publication date in a thin metadata bar underneath, using the exact date value given above — no issue number, no volume number, no fabricated numbering of any kind.
 - Typography: pair one strong sans-serif for headlines/UI (weight contrast, tight leading) with a serif or clean sans for body copy. Avoid an all-serif academic look.
 - Color: black, white, off-white paper background (#F8F5EE), one accent color used sparingly (e.g. for the timeline markers, ticker bar, or "BREAKING" badge) — not full color, but not flat monochrome either.
 - No cards with shadows/rounded corners, no dashboard widgets, no centered plain paragraphs.
