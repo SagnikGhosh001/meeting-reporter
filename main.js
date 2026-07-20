@@ -1,5 +1,6 @@
 import { callOllama } from "./src/call-ollama.js";
 import { createHtmlPrompt, createSummaryPrompt } from "./src/prompts.js";
+import { readFile, writeFile } from "./src/writeFIle.js";
 
 const transcript = `
 aof-xspt-phw (2026-07-19 20:57 GMT+5:30) - Transcript
@@ -58,10 +59,14 @@ const htmlPrompt = createHtmlPrompt(
         day: "numeric",
     }),
 );
+
 console.log("creating the html");
 const html = await callOllama(htmlPrompt);
 
-Deno.writeTextFileSync(
-    `./results/newspaper-${new Date().toISOString()}.html`,
-    html,
-);
+const filename = `newspaper-${new Date().toISOString()}.html`;
+writeFile(`../step-11-catalogs/pages/${filename}`, html);
+
+const files = JSON.parse(readFile("../step-11-catalogs/files.json"));
+files.unshift(filename);
+
+writeFile(`../step-11-catalogs/files.json`, JSON.stringify(files, null, 2));
